@@ -8,6 +8,8 @@
 *	2. Hrishikesh Dahiya 	2016A7PS0057G
 *	3. Mounil Memaya 	    2016A7PS0077G
 *	4. Satyajeet Jena   	2016A7PS0054G
+*   5. Ayush Gupta          2016A7PS0024G
+*   6. Bhavish Singh        2016A7PS0726G (Campus Roadie)
 * Copyright for these participants.
 * 
 *
