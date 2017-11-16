@@ -2,7 +2,7 @@
 * This is a simple prolog program for simulations of tic-tac-toe game.
 *
 * This particular program is to be used only for the Logic in Computer Science 
-* assignment. 
+* assignment. Not for external use, could be dangerous.
 *
 * This is a group project wherein participants are as follows :-
 *	1. Atul Rai 		2016A7PS0724G
@@ -11,52 +11,54 @@
 *	4. Satyajeet Jena   	2016A7PS0054G
 *   	5. Ayush Gupta          2016A7PS0024G
 *   	6. Bhavish Singh        2016A7PS0726G 
+* Copyright for these participants.
 * 
 *
-* Below predicates define the program. Please go through the README.
-* It will help you run the code. Our main purpose is not the code but
-* the First Order Logic defined in the PDF given with this code.
-* The PDF defines all the rules and coditions to be followed while
-* executing this code. Have Fun Playing!!
+* Here goes your much awaited (the)code
+*
+* Below predicates define the winning conds
 */
 
 
 /* 
-* minimax(Position, BestNextPosition, Value)
-* Position is a postion on Board, Value is its minimax value.
+* minimax(Position, BestNextPosition, Val)
+* Position is a pos, Val is its minimax value.
 * Best move from Position leads to pos BestNextPosition.
 */
-minimax(Position, BestNextPosition, Value) :-                     
+minimax(Position, BestNextPosition, Val) :-                     
     bagof(NextPosition, move(Position, NextPosition), NextPositionList),
-    best(NextPositionList, BestNextPosition, Value), !.
+    best(NextPositionList, BestNextPosition, Val), !.
 
-minimax(Position, _, Value) :-                   
-    utility(Position, Value).
-
-
-best([Position], Position, Value) :-
-    minimax(Position, _, Value), !.
-
-best([Position1 | PositionList], BestPosition, BestValue) :-
-    minimax(Position1, _, Value1),
-    best(PositionList, Position2, Value2),
-    betterOf(Position1, Value1, Position2, Value2, BestPosition, BestValue).
+minimax(Position, _, Val) :-                   
+    utility(Position, Val).
 
 
+best([Position], Position, Val) :-
+    minimax(Position, _, Val), !.
 
-betterOf(Position0, Value0, _, Value1, Position0, Value0) :-   
+best([Position1 | PositionList], BestPosition, BestVal) :-
+    minimax(Position1, _, Val1),
+    best(PositionList, Position2, Val2),
+    betterOf(Position1, Val1, Position2, Val2, BestPosition, BestVal).
+
+
+
+betterOf(Position0, Val0, _, Val1, Position0, Val0) :-   
     min_to_move(Position0),                      
-    Value0 > Value1, !                         
+    Val0 > Val1, !                         
     ;
     max_to_move(Position0),                     
-    Value0 < Value1, !.                           
+    Val0 < Val1, !.                           
 
-betterOf(_, _, Position1, Value1, Position1, Value1).        
+betterOf(_, _, Position1, Val1, Position1, Val1).        
 
-/*
-* move(+Position, -NextPosition)
-* True if there is a legal (according to rules) move from Position to NextPosition.
-*/
+
+
+
+
+
+/*% move(+Position, -NextPosition)
+% True if there is a legal (according to rules) move from Position to NextPosition.*/
 move([X1, play, Board], [X2, win, NextBoard]) :-
     nextPlayer(X1, X2),
     move_aux(X1, Board, NextBoard),
@@ -71,45 +73,35 @@ move([X1, play, Board], [X2, play, NextBoard]) :-
     nextPlayer(X1, X2),
     move_aux(X1, Board, NextBoard).
 
-/* 
-* move_aux(+Player, +Board, -NextBoard)f20160057
-* True if NextBoard is Board with an empty case replaced by Player mark.
-*/
+/*% move_aux(+Player, +Board, -NextBoard)f20160057
+% True if NextBoard is Board with an empty case replaced by Player mark.*/
 move_aux(P, [0|Bs], [P|Bs]).
 
 move_aux(P, [B|Bs], [B|B2s]) :-
     move_aux(P, Bs, B2s).
 
 
-/*
-* min_to_move(+Position)
-* True if the next player to play is the MIN player.
-*/
+/*% min_to_move(+Position)
+% True if the next player to play is the MIN player.*/
 min_to_move([o, _, _]).
 
-/*
-* max_to_move(+Position)
-* True if the next player to play is the MAX player.
-*/
+/*% max_to_move(+Position)
+% True if the next player to play is the MAX player.*/
 max_to_move([x, _, _]).
 
-/*
-* utility(+Position, -Value) :-
-* True if Value the the result of the evaluation function at Position.
-* We will only evaluate for final pos.
-* So we will only have MAX win, MIN win or draw.
-* We will use  1 when MAX win
-*             -1 when MIN win
-*              0 otherwise.
-*/
+/*% utility(+Position, -Val) :-
+% True if Val the the result of the evaluation function at Position.
+% We will only evaluate for final pos.
+% So we will only have MAX win, MIN win or draw.
+% We will use  1 when MAX win
+%             -1 when MIN win
+%              0 otherwise.*/
 utility([o, win, _], 1).     
 utility([x, win, _], -1).     
 utility([_, draw, _], 0).
 
-/*
-* winPosition(+Player, +Board)
-* True if Player win in Board.
-*/
+/*% winPosition(+Player, +Board)
+% True if Player win in Board.*/
 winPosition(P, [X1, X2, X3, X4, X5, X6, X7, X8, X9]) :-
     equal(X1, X2, X3, P) ;   
     equal(X4, X5, X6, P) ;    
@@ -120,55 +112,48 @@ winPosition(P, [X1, X2, X3, X4, X5, X6, X7, X8, X9]) :-
     equal(X1, X5, X9, P) ;    
     equal(X3, X5, X7, P).     
 
-/*
-* drawPosition(+Player, +Board)
-* True if the game is a draw.
-*/
+/*% drawPosition(+Player, +Board)
+% True if the game is a draw.*/
 drawPosition(_,Board) :-
     \+ member(0, Board).
 
 
-/*
-* equal(+W, +X, +Y, +Z).
-* True if W = X = Y = Z.
-*/
+/*% equal(+W, +X, +Y, +Z).
+% True if W = X = Y = Z.*/
 equal(X, X, X, X).
 
 
-/*
-* bestMove(+Position, -NextPosition)
-* Compute the best Next Position from Position Position
-* with minimax or alpha-beta algorithm.
-*/
+
+
+
+/*% bestMove(+Position, -NextPosition)
+% Compute the best Next Position from Position Position
+% with minimax or alpha-beta algorithm.*/
 bestMove(Position, NextPosition) :-
     minimax(Position, NextPosition, _).
 
 
-/*
-* play
-* Start the game.
-*/
+/*% play
+% Start the game.*/
 play :-
     nl,
     write('===================='), nl,
-	  write('= TicTacToe ='), nl,
+	  write('= Prolog TicTacToe ='), nl,
 	  write('===================='), nl, nl,
-	  write('Reminder : x starts the game'), nl,
-	  playAskPlayer.
+	  write('Rem : x starts the game'), nl,
+	  playAskColor.
 	
 	
 	
-/*
-* playAskPlayer
-* Ask the player ('x' or 'o') for the human player and start the game with it.
-*/
-playAskPlayer :-
-	  nl, write('Choose for human player ? (x or o)'), nl,
+/*% playAskColor
+% Ask the color for the human player and start the game with it.*/
+playAskColor :-
+	  nl, write('Color for human player ? (x or o)'), nl,
 	  read(Player), nl,
 	  (
 	    Player \= o, Player \= x, !,    
-	    write('Error : not a valid player !'), nl,
-	    playAskPlayer                     
+	    write('Error : not a valid color !'), nl,
+	    playAskColor                     
 	    ;
 	    EmptyBoard = [0, 0, 0, 0, _, 0, 0, 0, 0],
 	    show(EmptyBoard), nl,
@@ -178,11 +163,9 @@ playAskPlayer :-
 	  ).
 
 
-/*
-* play(+Position, +HumanPlayer)
-* If next player to play in pos is equal to HumanPlayer -> Human must play
-* Ask to human what to do.
-*/
+/*% play(+Position, +HumanPlayer)
+% If next player to play in pos is equal to HumanPlayer -> Human must play
+% Ask to human what to do.*/
 play([Player, play, Board], Player) :- !,
     nl, write('Next move ?'), nl,
     read(Position), nl,                                
@@ -207,11 +190,9 @@ play([Player, play, Board], Player) :- !,
 
 
 
-/*
-* play(+Position, +HumanPlayer)
-* If it is not human who must play -> Computer must play
-* Compute the best move for computer with minimax or alpha-beta.
-*/
+/*% play(+Position, +HumanPlayer)
+% If it is not human who must play -> Computer must play
+% Compute the best move for computer with minimax or alpha-beta.*/
 play([Player, play, Board], HumanPlayer) :-
     nl, write('Computer play : '), nl, nl,
     % Compute the best move
@@ -231,16 +212,12 @@ play([Player, play, Board], HumanPlayer) :-
 
 
 
-/*
-* nextPlayer(X1, X2)
-* True if X2 is the next player to play after X1.
-*/
+/*% nextPlayer(X1, X2)
+% True if X2 is the next player to play after X1.*/
 nextPlayer(o, x).
 nextPlayer(x, o).
 
-/*
-* When human play
-*/
+/*% When human play*/
 humanMove([X1, play, Board], [X2, State, NextBoard], Position) :-
     nextPlayer(X1, X2),
     set1(Position, X1, Board, NextBoard),
@@ -252,11 +229,9 @@ humanMove([X1, play, Board], [X2, State, NextBoard], Position) :-
 
 
 
-/*
-* set1(+Elem, +Position, +List, -resultList).
-* Set Elem at Position in List => Result in resultList.
-* Rem : counting starts at 1. 
-*/
+/*% set1(+Elem, +Position, +List, -resultList).
+% Set Elem at Position in List => Result in resultList.
+% Rem : counting starts at 1.*/
 set1(1, E, [X|Ls], [E|Ls]) :- !, X = 0.
 
 set1(P, E, [X|Ls], [X|L2s]) :-
@@ -265,10 +240,8 @@ set1(P, E, [X|Ls], [X|L2s]) :-
     set1(P1, E, Ls, L2s).
 
 
-/*
-* show(+Board)
-* Show the board to current output.
-*/
+/*% show(+Board)
+% Show the board to current output.*/
 show([X1, X2, X3, X4, X5, X6, X7, X8, X9]) :-
     write('   '), show2(X1),
     write(' | '), show2(X2),
@@ -284,11 +257,9 @@ show([X1, X2, X3, X4, X5, X6, X7, X8, X9]) :-
 
 
 
-/*
-* show2(+Term)
-* Write the term to current outupt
-* Replace 0 by ' '.
-*/
+/*% show2(+Term)
+% Write the term to current outupt
+% Replace 0 by ' '.*/
 show2(X) :-
     X = 0, !,
     write(' ').

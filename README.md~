@@ -10,6 +10,5 @@ Here are the instructions to run the program:-
 4. ?- [tictactoe]. (for compiling the code)
 5. ?- play.         (starting the game)
 6. |: o.            (choosing naught to be the second player)
-7. |: 3.            (for further moves, just type in the position 
-			number ending with a period)
+7. |: 3.            (for further moves, just type in the position number ending with a period)
 
